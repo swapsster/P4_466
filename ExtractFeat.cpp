@@ -58,7 +58,7 @@ void ExtractFeat::getDimensions(Fillet &fillet)
 	mu = moments(fillet.contour, false);
 
 	//  Get the mass centers with use of moment
-	fillet.contour_center_mass = Point2d(mu.m10 / mu.m00, mu.m01 / mu.m00);
+	fillet.contour_center_mass = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
 
 }
 
@@ -153,8 +153,9 @@ void ExtractFeat::getNotches(Fillet &fillet)
 void ExtractFeat::getShape(Fillet &fillet)
 {
 	// Find the convex hull object for each contour
-	convexHull((fillet.contour), fillet.hull);
-	fillet.hullarity = ((contourArea(fillet.contour)) / contourArea(fillet.hull));
+	vector<Point> hull;
+	convexHull((fillet.contour), hull);
+	fillet.hullarity = ((contourArea(fillet.contour)) / contourArea(hull));
 }
 
 void ExtractFeat::getSkin(Fillet &fillet)
@@ -193,14 +194,14 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	erode(skin_region, skin_region, element);
 	dilate(skin_region, skin_region, element);
 
-	vector<vector<Point>> skin_contourtemp;
+	vector<vector<Point>> skin_contour;
 
-	findContours(skin_region(region), skin_contourtemp, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-	for (int i = 0; i< skin_contourtemp.size(); i++)
+	findContours(skin_region(region), skin_contour, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	for (int i = 0; i< skin_contour.size(); i++)
 	{
-		if (contourArea(skin_contourtemp[i]) > 5000)
+		if (contourArea(skin_contour[i]) > 5000)
 		{
-			fillet.skinArea += contourArea(skin_contourtemp[i]);
+			fillet.skinArea += contourArea(skin_contour[i]);
 		}
 	}
 }
