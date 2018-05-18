@@ -183,12 +183,9 @@ void ExtractFeat::getSkin(Fillet &fillet)
 
 	int erosion_size = 11;
 
-	Mat element = getStructuringElement(MORPH_RECT,
-		Size(2 * erosion_size + 1, 2 * erosion_size + 1),
-		Point(erosion_size, erosion_size));
+	Mat element = getStructuringElement(MORPH_RECT, Size(23, 23));
 
-	erode(skin_region, skin_region, element);
-	dilate(skin_region, skin_region, element);
+	morphologyEx(skin_region, skin_region, MORPH_OPEN, element);
 
 	vector<vector<Point>> skin_contour;
 
