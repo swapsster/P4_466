@@ -172,11 +172,11 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	vector<Mat> hsv_planes; // Separate the image in 3 planes ( H, S, and V )
 	split(skinimg, hsv_planes);
 
+	hsv_planes[1].copyTo(skin_region(region));
+	
 	// Set threshold and maxValue
 	double thresh = 125;
 	double maxValue = 255;
-	hsv_planes[1].copyTo(skin_region(region));
-
 	// Binary Threshold
 	medianBlur(skin_region, skin_region, 21);
 	threshold(skin_region, skin_region, thresh, maxValue, 4);
