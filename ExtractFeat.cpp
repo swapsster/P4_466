@@ -181,8 +181,6 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	medianBlur(skin_region, skin_region, 21);
 	threshold(skin_region, skin_region, thresh, maxValue, 4);
 
-	int erosion_size = 11;
-
 	Mat element = getStructuringElement(MORPH_RECT, Size(23, 23));
 
 	morphologyEx(skin_region, skin_region, MORPH_OPEN, element);
@@ -192,10 +190,7 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	findContours(skin_region(region), skin_contour, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 	for (int i = 0; i< skin_contour.size(); i++)
 	{
-		if (contourArea(skin_contour[i]) > 5000)
-		{
-			fillet.skinArea += contourArea(skin_contour[i]);
-		}
+		fillet.skinArea += contourArea(skin_contour[i]);
 	}
 }
 
