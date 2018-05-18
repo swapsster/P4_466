@@ -168,7 +168,7 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	Rect region = Rect(edgeSize, edgeSize, fillet.boundRect.width, fillet.boundRect.height);
 
 
-	Mat skinimg = Mat(fillet.boundRect.height + edgeSize * 2, fillet.boundRect.width + edgeSize * 2, CV_8UC3, Scalar(0, 0, 0));
+	Mat skinimg;
 	cvtColor(fillet.img, skinimg, COLOR_BGR2HSV);
 
 	vector<Mat> hsv_planes; // Separate the image in 3 planes ( H, S, and V )
