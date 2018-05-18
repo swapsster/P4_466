@@ -23,9 +23,8 @@ struct Fillet {
 
 	
 	Rect boundRect;									// The img is generated from the original image using this boundingRect
-	Point2d contour_center_mass;					//coordinate of contour center of mass
-	vector<Point> contour,hull;							// Coordinates of the fillet 
-	vector<vector<Point>> bloodstain_contours, notches,skin_contour;		// Coordinates of the bloodstains detected + Coordinates of the detected notches				
+	Point2f contour_center_mass;					//coordinate of contour center of mass
+	vector<Point> contour;							// Coordinates of the fillet 
 	Mat img, bin;									// Only the boundingRect image from original image + Binary image of fillet							
 };
 
