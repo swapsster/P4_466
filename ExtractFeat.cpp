@@ -162,18 +162,15 @@ void ExtractFeat::getSkin(Fillet &fillet)
 {
 	int edgeSize = 50;
 
-	//Mat blood_region = Mat(fillet.boundRect.height + edgeSize * 2, fillet.boundRect.width + edgeSize * 2, CV_8U, Scalar(0, 0, 0));
 	Mat skin_region = Mat(fillet.boundRect.height + edgeSize * 2, fillet.boundRect.width + edgeSize * 2, CV_8U, Scalar(0, 0, 0));
 
 	Rect region = Rect(edgeSize, edgeSize, fillet.boundRect.width, fillet.boundRect.height);
-
 
 	Mat skinimg;
 	cvtColor(fillet.img, skinimg, COLOR_BGR2HSV);
 
 	vector<Mat> hsv_planes; // Separate the image in 3 planes ( H, S, and V )
 	split(skinimg, hsv_planes);
-
 
 	// Set threshold and maxValue
 	double thresh = 125;
@@ -185,7 +182,6 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	threshold(skin_region, skin_region, thresh, maxValue, 4);
 
 	int erosion_size = 11;
-
 
 	Mat element = getStructuringElement(MORPH_RECT,
 		Size(2 * erosion_size + 1, 2 * erosion_size + 1),
