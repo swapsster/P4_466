@@ -26,10 +26,12 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 
 	for (int x = 0; x < img.cols; x++) {
 		for (int y = 0; y < img.rows; y++) {
-			// Check if blue pixel is "stronger" than red and green
-			if (color_arr[0].at<uchar>(y, x) >(color_arr[2].at<uchar>(y, x)))
-				if (color_arr[0].at<uchar>(y, x) >(color_arr[1].at<uchar>(y, x)))
-					bin.at<uchar>(y, x) = 0;
+		// Check if blue pixel is "stronger" than red and green
+            	int blue = color_arr[0].at<uchar>(y, x);
+            	int green = color_arr[1].at<uchar>(y, x);
+            	int red = color_arr[2].at<uchar>(y, x);
+		if ((blue > red) && (blue > green))
+			bin.at<uchar>(y, x) = 0;
 		}
 	}
 
