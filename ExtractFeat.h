@@ -36,6 +36,7 @@ public:
 	void clearFileContent();
 	void displayImg(const String &name, const Mat &img);
 	void makeBinary(const Mat &img, Mat &bin);
+	Scalar weightedMean(const Mat& img, const Mat& mask);
 	//------------Nuværende-fisk----------------------
 	void getMeanHist(Fillet &fillet);
 	void getBloodstains(Fillet &fillet);
