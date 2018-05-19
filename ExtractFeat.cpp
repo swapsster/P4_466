@@ -51,10 +51,6 @@ void ExtractFeat::getMeanHist(Fillet &fillet)
 	fillet.hist_mean[1] = means.val[2];
 }
 
-void ExtractFeat::getDimensions(Fillet &fillet)
-{
-	fillet.area = contourArea(fillet.contour); // Define the minimum rectangle around the contour
-}
 
 void ExtractFeat::getBloodstains(Fillet &fillet)
 {
@@ -237,7 +233,8 @@ void ExtractFeat::run(vector<Mat> &images)
 
 			///////////////// START PROCESSING /////////////////
 			Fillet new_fillet;
-
+			new_fillet.area = contour_area;
+			
 			// Save the contour points in relation to the bounding box
 			new_fillet.boundRect = boundingRect(contours[i]);
 
