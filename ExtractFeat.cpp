@@ -8,7 +8,7 @@ void ExtractFeat::clearFileContent()
 {
 	ofstream ofs;
 	ofs.open(data_file_path, std::ofstream::out | std::ofstream::trunc); // Open and clear content
-	ofs << "Name,Area,S_Mean,V_Mean,Bloodstains,Notches,Hullarity,Skin_Area\n";
+	ofs << "Name,Area,S_Mean,V_Mean,Bloodstains,Notches,Convexity,Skin_Area\n";
 	ofs.close();
 }
 
@@ -157,7 +157,7 @@ void ExtractFeat::getShape(Fillet &fillet)
 	// Find the convex hull object for each contour
 	vector<Point> hull;
 	convexHull((fillet.contour), hull);
-	fillet.hullarity = ((contourArea(fillet.contour)) / contourArea(hull));
+	fillet.convexity = ((contourArea(fillet.contour)) / contourArea(hull));
 }
 
 void ExtractFeat::getSkin(Fillet &fillet)
@@ -211,7 +211,7 @@ void ExtractFeat::saveFeatures(const Fillet &fillet)
 	datafile << fillet.hist_mean[0] << ',' << fillet.hist_mean[1] << ',';
 	datafile << fillet.bloodstain << ',';
 	datafile << fillet.largestNotch << ',';
-	datafile << fillet.hullarity << ',';
+	datafile << fillet.convexity << ',';
 	datafile << fillet.skinArea << '\n';
 	datafile.close();
 }
