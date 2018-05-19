@@ -234,9 +234,9 @@ void ExtractFeat::run(vector<Mat> &images)
 		int filletCounter = 0;
 		for (int i = 0; i < contours.size(); i++)
 		{
-
+			double contour_area = contourArea(contours[i]);
 			// Skip if the area is too small
-			if (contourArea(contours[i]) < 30000)
+			if (contour_area < 30000)
 			{
 				continue;
 			}
