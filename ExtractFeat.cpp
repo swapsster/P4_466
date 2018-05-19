@@ -54,14 +54,6 @@ void ExtractFeat::getMeanHist(Fillet &fillet)
 void ExtractFeat::getDimensions(Fillet &fillet)
 {
 	fillet.area = contourArea(fillet.contour); // Define the minimum rectangle around the contour
-
-	// Get the moments
-	Moments mu;
-	mu = moments(fillet.contour, false);
-
-	//  Get the mass centers with use of moment
-	fillet.contour_center_mass = Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
-
 }
 
 void ExtractFeat::getBloodstains(Fillet &fillet)
