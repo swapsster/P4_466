@@ -26,8 +26,10 @@ void loadImages(const String &path, vector<Mat> &images)
 		if (im.empty()) continue; //only proceed if successful
 
 		undistortImg(im);
-
-		im = im(Rect(0, 330, 1936, 722)); // This Rect is approx only the conveyor for test data billeder
+		
+		int x = 0, y = 330;
+		int width = 1936, height = 1037;
+		im = im(Rect(x, y, width - x, height - y));  // This Rect is approx only the conveyor for test data billeder
 
 		images.push_back(im);
 	}
