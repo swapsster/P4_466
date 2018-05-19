@@ -258,7 +258,8 @@ void ExtractFeat::run(vector<Mat> &images)
 
 			// Generate name of the individual countours
 			// fish [index of image]-[index of contour]
-			new_fillet.name = "fish_" + to_string(index) + "_" + to_string(filletCounter);
+			string index_str = (index > 9) ? to_string(index) : "0" + to_string(index);
+			new_fillet.name = "fish-" + index_str + "-" + to_string(filletCounter);
 
 			// Calculates the mean histogram value of each BGR channel
 			getMeanHist(new_fillet);
