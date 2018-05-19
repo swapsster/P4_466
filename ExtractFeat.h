@@ -15,7 +15,7 @@ struct Fillet {
 	String name;
 	double hist_mean[2] = { 0 };						// Saturation, Value
 	double area = 0;
-	double hullarity = 0;						// Contour area + convexity(squarity) which is contour area divided by boundrect area.
+	double convexity = 0;						// Contour area + convexity(squarity) which is contour area divided by boundrect area.
 	double skinArea = 0;
 	double largestNotch = 0;
 	bool bloodstain = false;
