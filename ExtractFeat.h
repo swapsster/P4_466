@@ -38,7 +38,6 @@ public:
 	void makeBinary(const Mat &img, Mat &bin);
 	//------------Nuværende-fisk----------------------
 	void getMeanHist(Fillet &fillet);
-	void getDimensions(Fillet &fillet);
 	void getBloodstains(Fillet &fillet);
 	void getNotches(Fillet &fillet);
 	void getShape(Fillet &fillet);
