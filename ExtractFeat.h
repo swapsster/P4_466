@@ -23,7 +23,6 @@ struct Fillet {
 
 	
 	Rect boundRect;									// The img is generated from the original image using this boundingRect
-	Point2f contour_center_mass;					//coordinate of contour center of mass
 	vector<Point> contour;							// Coordinates of the fillet 
 	Mat img, bin;									// Only the boundingRect image from original image + Binary image of fillet							
 };
