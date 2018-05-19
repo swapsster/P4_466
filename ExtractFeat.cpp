@@ -285,8 +285,6 @@ void ExtractFeat::run(vector<Mat> &images)
 			// Calculates the mean histogram value of each BGR channel
 			getMeanHist(new_fillet);
 
-			getDimensions(new_fillet);														// Saves desired dimentions of contour to Fillet object
-
 			getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
 
 			getNotches(new_fillet);															//Detects notches and gives coordinates of them.

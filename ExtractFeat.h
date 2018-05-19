@@ -30,7 +30,7 @@ struct Fillet {
 class ExtractFeat
 {
 public:
-	String data_file_path = "features.dat";
+	String data_file_path = "../data/features.dat";
 
 	//------------Uden-For-Loop----------------------
 	void clearFileContent();

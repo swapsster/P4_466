@@ -39,7 +39,7 @@ int main()
 {
 	// Vector for all images to be proccesed
 	vector<Mat> images;
-	loadImages(R"(C:\Users\Axel\Desktop\herring\*.tif)", images);
+	loadImages(R"(../data/images/training/*.tif)", images);
 
 	ExtractFeat classifier;
 	classifier.run(images);
