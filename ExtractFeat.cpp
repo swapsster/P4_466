@@ -38,6 +38,27 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 	medianBlur(bin, bin, 7); // Reduce salt-and-peper noise
 }
 
+Scalar ExtractFeat::weightedMean(const Mat& img, const Mat& mask) {
+    vector<Mat> planes; 	// Separate the image in 3 planes
+    split(img, planes);
+
+    double h_channel = 0, s_channel = 0, v_channel = 0;
+    int h_count = 0, s_count = 0, v_count = 0;
+    for (int x = 0; x < img.cols; x++) {
+        for (int y = 0; y < img.rows; y++) {
+            if (mask.at<uchar>(y, x) == 255) {
+                h_channel += planes[0].at<uchar>(y,x);
+                s_channel += planes[1].at<uchar>(y,x);
+                v_channel += planes[2].at<uchar>(y,x);
+                h_count++;
+                s_count++;
+                v_count++;
+            }
+        }
+    }
+    return Scalar(h_channel/h_count, s_channel/s_count, v_channel/v_count);
+}
+
 //----------------------------------------------Nuværende-fisk--------------------------------------------------------------------------------------------------
 
 void ExtractFeat::getMeanHist(Fillet &fillet)
@@ -45,7 +66,7 @@ void ExtractFeat::getMeanHist(Fillet &fillet)
 	Mat hsv_img;
 	cvtColor(fillet.img, hsv_img, CV_BGR2HSV);
 
-	Scalar means = mean(fillet.img, fillet.bin);
+	Scalar means = weightedMean(fillet.img, fillet.bin);
 
 	fillet.hist_mean[0] = means.val[1];
 	fillet.hist_mean[1] = means.val[2];
