@@ -13,6 +13,8 @@ notch_index = logical(official{:, 4});
 skin_index = logical(official{:, 7});
 meat_index = ~skin_index;
 
+deform_index = logical(official{:, 6});
+
 
 
 %% Mean colour
@@ -32,7 +34,6 @@ hold on
 
 scatter(skin_s_value, skin_v_value)
 scatter(meat_s_value, meat_v_value)
-refline([-10 1545])
 title('S,V channel values from Skin and Meat side')
 xlabel('Satuation')
 ylabel('Value')
@@ -43,7 +44,7 @@ legend('Skin side', 'Meat side', 'Location','northwest')
 %% Notches
 % Save all features where notches was set to 1
 notches = features{notch_index, 6};
-not_notches = features{~notch_index, 6};
+%not_notches = features{~notch_index, 6};
 
 figure
 set(gcf, 'Position', [700 0 900 400])
@@ -61,3 +62,24 @@ plot(xlim,[y_max y_max])
 title('Comparison of notch area')
 ylabel('Notch area [pixels^2]')
 legend('Fillets without notches')
+
+%% Convexity
+
+good_convexity = features{~deform_index, 7};
+bad_convexity = features{deform_index, 7};
+
+figure
+b = bar(c, features{:,7});
+hold on
+b.FaceColor = 'flat';
+for i=1:length(deform_index)
+    if(deform_index(i))
+        b.CData(i,:) = [0.8510 0.3294 0.1020];
+    end
+end
+y_max = min(bad_convexity);
+xlim = get(gca, 'xlim');
+plot(xlim,[y_max y_max])
+title('Comparison of convexity')
+ylabel('Convexity')
+legend('Fillets with normal shape')
