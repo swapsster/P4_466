@@ -107,8 +107,8 @@ void ExtractFeat::getNotches(Fillet &fillet)
 	vector<vector<Point>> notch_contour;
 
 	Mat bin_region = Mat(fillet.bin.rows + edgeSize * 2, fillet.bin.cols + edgeSize * 2, CV_8U, Scalar(0, 0, 0));
-	Mat bin_notch = Mat(fillet.bin.rows + edgeSize * 2, fillet.bin.cols + edgeSize * 2, CV_8U);
-	Rect region = Rect(edgeSize, edgeSize, fillet.boundRect.width, fillet.boundRect.height);
+	Mat bin_notch;
+	Rect region = Rect(edgeSize, edgeSize, fillet.bin.cols, fillet.bin.rows);
 
 
 	fillet.bin.copyTo(bin_region(region));
@@ -152,9 +152,9 @@ void ExtractFeat::getSkin(Fillet &fillet)
 {
 	int edgeSize = 50;
 
-	Mat skin_region = Mat(fillet.boundRect.height + edgeSize * 2, fillet.boundRect.width + edgeSize * 2, CV_8U, Scalar(0, 0, 0));
+	Mat skin_region = Mat(fillet.img.rows + edgeSize * 2, fillet.img.cols + edgeSize * 2, CV_8U, Scalar(0, 0, 0));
 
-	Rect region = Rect(edgeSize, edgeSize, fillet.boundRect.width, fillet.boundRect.height);
+	Rect region = Rect(edgeSize, edgeSize, fillet.img.cols, fillet.img.rows);
 
 	Mat skinimg;
 	cvtColor(fillet.img, skinimg, COLOR_BGR2HSV);
