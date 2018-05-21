@@ -285,7 +285,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 
 			int m = 10;
 			int b = 1500;
-			getMeanHist(new_fillet); // Calculates the mean histogram value of each HSV channel
+			getMean(new_fillet); // Calculates the mean histogram value of each HSV channel
 			if (m*new_fillet.hist_mean[0] + new_fillet.hist_mean[1] >= b) // meat side
 			{// if over the b value it is the meat side.
 				getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
@@ -417,7 +417,7 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 			new_fillet.name = "fish-" + index_str + "-" + to_string(filletCounter);
 
 			//TRAINING-----------------------------------------------------------
-			getMeanHist(new_fillet); // Calculates the mean histogram value of each HSV channel
+			getMean(new_fillet); // Calculates the mean histogram value of each HSV channel
 
 			getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
 
