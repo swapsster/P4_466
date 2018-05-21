@@ -48,7 +48,7 @@ public:
 
 	void Classify(const Fillet &fillet);
 	
-	void getMeanHist(Fillet &fillet);
+	void getMean(Fillet &fillet);
 	void getBloodstains(Fillet &fillet);
 	void getNotches(Fillet &fillet);
 	void getShape(Fillet &fillet);
