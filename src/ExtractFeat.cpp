@@ -49,93 +49,6 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 }
 
 //----------------------------------------------Nuværende-fisk--------------------------------------------------------------------------------------------------
-void ExtractFeat::training(Fillet &fillet)
-{
-	getMean(fillet); // Calculates the mean histogram value of each HSV channel
-
-	getBloodstains(fillet);														// Detects bloodstains and draws them on input image
-
-	getNotches(fillet);															//Detects notches and gives coordinates of them.
-
-	getShape(fillet);
-
-	getSkin(fillet);
-
-	// -------after-Features-------------------------------------
-	saveFeatures(fillet);
-
-	//displayImg("fillet.img_" + new_fillet.name, new_fillet.img);
-}
-
-void ExtractFeat::testing(Fillet &fillet)
-{
-	int m = 10;
-	int b = 1500;
-	getMean(fillet); // Calculates the mean histogram value of each HSV channel
-	if (m*fillet.hist_mean[0] + fillet.hist_mean[1] >= b) // meat side
-	{// if over the b value it is the meat side.
-		getBloodstains(fillet);														// Detects bloodstains and draws them on input image
-		if (fillet.bloodstain == true)
-		{ 
-			fillet.classification = "Bad meat";
-			fillet.reason = "Bloodstain";
-		}
-		else
-		{
-			getShape(fillet);
-			if(fillet.convexity<0.9436)
-			{ 
-				fillet.classification = "Bad meat";
-				fillet.reason = "Deformity";
-			}
-			else
-			{
-				getNotches(fillet);															//Detects notches and gives coordinates of them.
-				if(fillet.largestNotch>142.5)
-				{ 
-				fillet.classification = "Bad meat";
-				fillet.reason = "Notch";
-				}
-
-				else
-					fillet.classification = "Good meat";
-			}
-		}
-	}
-	else //Skin side
-	{
-		// if over the b value it is the meat side.
-		getSkin(fillet);														// Detects bloodstains and draws them on input image
-		if (fillet.skinArea>66000)
-		{ 
-			fillet.classification = "Bad Skin";
-			fillet.reason = "Excessive Skin";
-		}
-		else
-		{
-			getShape(fillet);
-			if (fillet.convexity<0.9436)
-			{
-				fillet.classification = "Bad Skin";
-				fillet.reason = "Deformity";
-			}
-			else
-			{
-				getNotches(fillet);															//Detects notches and gives coordinates of them.
-				if (fillet.largestNotch > 142.5)
-				{
-					fillet.classification = "Bad Skin";
-					fillet.reason = "Notch";
-				}
-				else
-					fillet.classification = "Good Skin";
-			}
-		}
-	}
-	// -------After binary tree-------------------------------------
-	Classify(fillet);
-}
-
 
 void ExtractFeat::getMean(Fillet &fillet)
 {
@@ -313,8 +226,8 @@ void ExtractFeat::Classify(const Fillet &fillet)
 	datafile.close();
 }
 
-//----------------------------------------------MAIN--------------------------------------------------------------------------------------------------
-void ExtractFeat::run(vector<Mat> &images)
+//----------------------------------------------Testing-------------------------------------------------------------------------------------------------
+void ExtractFeat::runTesting(vector<Mat> &images)
 {
 	clearFileContent(); // Clear content of file to write new data
 
@@ -370,16 +283,71 @@ void ExtractFeat::run(vector<Mat> &images)
 			string index_str = (index > 9) ? to_string(index) : "0" + to_string(index);
 			new_fillet.name = "fish-" + index_str + "-" + to_string(filletCounter);
 
-			if (testingMode == false)
-			{
-			//TRAINING-----------------------------------------------------------
-			training(new_fillet);
+			int m = 10;
+			int b = 1500;
+			getMeanHist(new_fillet); // Calculates the mean histogram value of each HSV channel
+			if (m*new_fillet.hist_mean[0] + new_fillet.hist_mean[1] >= b) // meat side
+			{// if over the b value it is the meat side.
+				getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
+				if (new_fillet.bloodstain == true)
+				{
+					new_fillet.classification = "Bad meat";
+					new_fillet.reason = "Bloodstain";
+				}
+				else
+				{
+					getShape(new_fillet);
+					if (new_fillet.convexity<0.9436)
+					{
+						new_fillet.classification = "Bad meat";
+						new_fillet.reason = "Deformity";
+					}
+					else
+					{
+						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+						if (new_fillet.largestNotch>142.5)
+						{
+							new_fillet.classification = "Bad meat";
+							new_fillet.reason = "Notch";
+						}
+
+						else
+							new_fillet.classification = "Good meat";
+					}
+				}
 			}
-			if (testingMode == true) 
+			else //Skin side
 			{
-			// TESTING ---------------------------------------------------
-			testing(new_fillet);
+				// if over the b value it is the meat side.
+				getSkin(new_fillet);														// Detects bloodstains and draws them on input image
+				if (new_fillet.skinArea>66000)
+				{
+					new_fillet.classification = "Bad Skin";
+					new_fillet.reason = "Excessive Skin";
+				}
+				else
+				{
+					getShape(new_fillet);
+					if (new_fillet.convexity<0.9436)
+					{
+						new_fillet.classification = "Bad Skin";
+						new_fillet.reason = "Deformity";
+					}
+					else
+					{
+						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+						if (new_fillet.largestNotch > 142.5)
+						{
+							new_fillet.classification = "Bad Skin";
+							new_fillet.reason = "Notch";
+						}
+						else
+							new_fillet.classification = "Good Skin";
+					}
+				}
 			}
+			// -------After binary tree-------------------------------------
+			Classify(new_fillet);
 
 		}
 
@@ -391,3 +359,87 @@ void ExtractFeat::run(vector<Mat> &images)
 	waitKey(0);
 
 }
+//----------------------------------------------TRAINING--------------------------------------------------------------------------------------------------
+void ExtractFeat::runTraining(vector<Mat> &images)
+{
+	clearFileContent(); // Clear content of file to write new data
+
+	for (int index = 0; index < images.size(); index++)			// Loop through all the images
+	{
+
+		Mat bin = Mat(images[index].rows, images[index].cols, CV_8U, 255);
+
+		makeBinary(images[index], bin);		// Make the image binary (black with white spots)
+
+		vector<vector<Point>> contours;		// Find the contours on the binary image
+		findContours(bin, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+
+		int filletCounter = 0;
+		for (int i = 0; i < contours.size(); i++)
+		{
+			double contour_area = contourArea(contours[i]);
+			// Skip if the area is too small
+			if (contour_area < 30000)
+			{
+				continue;
+			}
+
+			filletCounter++;
+
+			///////////////// START PROCESSING /////////////////
+			Fillet new_fillet;
+			new_fillet.area = contour_area;
+
+			// Save the contour points in relation to the bounding box
+			new_fillet.boundRect = boundingRect(contours[i]);
+
+			//Mat mask = Mat(images[index].rows, images[index].cols, CV_8UC3,
+			new_fillet.bin = Mat(new_fillet.boundRect.height, new_fillet.boundRect.width, CV_8U, Scalar(0));
+			new_fillet.img = Mat(new_fillet.boundRect.height, new_fillet.boundRect.width, CV_8UC3, Scalar(0, 0, 0));
+
+			for (int j = 0; j < contours[i].size(); j++) {
+				new_fillet.contour.emplace_back(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
+			}
+
+			vector<vector<Point>> current_contour;
+
+			current_contour.push_back(new_fillet.contour);
+
+			// Saves a mask of the current fillet.
+			drawContours(new_fillet.bin, current_contour, 0, Scalar(255, 255, 255), -1);
+
+			// Copy only where the boundingRect is
+			images[index](new_fillet.boundRect).copyTo(new_fillet.img, bin(new_fillet.boundRect));
+
+			// Generate name of the individual countours
+			// fish [index of image]-[index of contour]
+			string index_str = (index > 9) ? to_string(index) : "0" + to_string(index);
+			new_fillet.name = "fish-" + index_str + "-" + to_string(filletCounter);
+
+			//TRAINING-----------------------------------------------------------
+			getMeanHist(new_fillet); // Calculates the mean histogram value of each HSV channel
+
+			getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
+
+			getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+
+			getShape(new_fillet);
+
+			getSkin(new_fillet);
+
+			// -------after-Features-------------------------------------
+			saveFeatures(new_fillet);
+
+			//displayImg("fillet.img_" + new_fillet.name, new_fillet.img);
+
+		}
+
+		String name_orig = "Original img " + to_string(index);
+		displayImg(name_orig, images[index]);
+
+	}
+
+	waitKey(0);
+
+}
+
