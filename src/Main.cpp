@@ -1,4 +1,6 @@
-﻿#include "ExtractFeat.h"
+#include "ExtractFeat.h"
+
+
 
 using namespace cv;
 using namespace std;
@@ -7,7 +9,7 @@ void undistortImg(Mat &img)
 {
 	Mat undistorted;
 
-	double camMatrixData[] = {2898.4947, 0,	1006.1504, 0, 2898.7942, 621.3726, 0, 0, 1};
+	double camMatrixData[] = { 2898.4947, 0,	1006.1504, 0, 2898.7942, 621.3726, 0, 0, 1 };
 	double distCoeffsData[] = { -0.2296, -0.5837, 0, 0 };
 
 	Mat camMatrix = Mat(3, 3, CV_64F, camMatrixData); //Float matrix with principal points and focal lengths
@@ -26,7 +28,7 @@ void loadImages(const String &path, vector<Mat> &images)
 		if (im.empty()) continue; //only proceed if successful
 
 		undistortImg(im);
-		
+
 		int x = 0, y = 330;
 		int width = 1936, height = 1037;
 		im = im(Rect(x, y, width - x, height - y));  // This Rect is approx only the conveyor for test data billeder
@@ -35,14 +37,30 @@ void loadImages(const String &path, vector<Mat> &images)
 	}
 }
 
+void testing()
+{
+	vector<Mat> images;
+	loadImages("../data/images/testing/*.tif", images);
+	ExtractFeat classifier;
+	classifier.testingMode = true;
+	classifier.run(images);
+}
+
+ void training()
+{
+	vector<Mat> images;
+	loadImages("../data/images/training/*.tif", images);
+	ExtractFeat classifier;
+	classifier.testingMode = false;
+	classifier.run(images);
+}
 int main()
 {
-	// Vector for all images to be proccesed
-	vector<Mat> images;
-	loadImages(R"(../data/images/training/*.tif)", images);
+	
+	//training();
+	
+	testing();
 
-	ExtractFeat classifier;
-	classifier.run(images);
 
 	return 0;
 }
