@@ -399,7 +399,11 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 			new_fillet.img = Mat(new_fillet.boundRect.height, new_fillet.boundRect.width, CV_8UC3, Scalar(0, 0, 0));
 
 			for (int j = 0; j < contours[i].size(); j++) {
-				new_fillet.contour.emplace_back(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
+				int relativeX = contours[i][j].x - new_fillet.boundRect.x;
+				int relativeY = contours[i][j].y - new_fillet.boundRect.y;
+
+				new_fillet.contour.emplace_back(relativeX, relativeY);	
+			
 			}
 
 			// Saves a mask of the current fillet.
