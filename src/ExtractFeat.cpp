@@ -179,8 +179,9 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	double maxValue = 255;
 	// Binary Threshold
 	medianBlur(skin_region, skin_region, 21);
-	threshold(skin_region, skin_region, thresh, maxValue, 4);
-
+	threshold(skin_region, skin_region, thresh, maxValue, THRESH_TOZERO_INV);
+	threshold(skin_region, skin_region, 1, maxValue, THRESH_BINARY);
+	
 	Mat element = getStructuringElement(MORPH_RECT, Size(23, 23));
 
 	morphologyEx(skin_region, skin_region, MORPH_OPEN, element);
