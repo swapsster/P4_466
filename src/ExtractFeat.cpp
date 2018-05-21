@@ -402,15 +402,11 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 				new_fillet.contour.emplace_back(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
 			}
 
-			vector<vector<Point>> current_contour;
-
-			current_contour.push_back(new_fillet.contour);
-
 			// Saves a mask of the current fillet.
-			drawContours(new_fillet.bin, current_contour, 0, Scalar(255, 255, 255), -1);
+			drawContours(new_fillet.bin, vector<vector<Point>> (1, new_fillet.contour), 0, Scalar(255, 255, 255), -1);
 
 			// Copy only where the boundingRect is
-			images[index](new_fillet.boundRect).copyTo(new_fillet.img, bin(new_fillet.boundRect));
+			images[index](new_fillet.boundRect).copyTo(new_fillet.img, new_fillet.bin);
 
 			// Generate name of the individual countours
 			// fish [index of image]-[index of contour]
