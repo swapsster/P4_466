@@ -403,7 +403,7 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 			}
 
 			// Saves a mask of the current fillet.
-			drawContours(new_fillet.bin, vector<vector<Point>> (1, new_fillet.contour), 0, Scalar(255, 255, 255), -1);
+			drawContours(new_fillet.bin, vector<vector<Point>> (1, new_fillet.contour), 0, 255, -1);
 
 			// Copy only where the boundingRect is
 			images[index](new_fillet.boundRect).copyTo(new_fillet.img, new_fillet.bin);
