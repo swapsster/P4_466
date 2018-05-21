@@ -51,7 +51,7 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 //----------------------------------------------Nuværende-fisk--------------------------------------------------------------------------------------------------
 void ExtractFeat::training(Fillet &fillet)
 {
-	getMeanHist(fillet); // Calculates the mean histogram value of each HSV channel
+	getMean(fillet); // Calculates the mean histogram value of each HSV channel
 
 	getBloodstains(fillet);														// Detects bloodstains and draws them on input image
 
@@ -71,7 +71,7 @@ void ExtractFeat::testing(Fillet &fillet)
 {
 	int m = 10;
 	int b = 1500;
-	getMeanHist(fillet); // Calculates the mean histogram value of each HSV channel
+	getMean(fillet); // Calculates the mean histogram value of each HSV channel
 	if (m*fillet.hist_mean[0] + fillet.hist_mean[1] >= b) // meat side
 	{// if over the b value it is the meat side.
 		getBloodstains(fillet);														// Detects bloodstains and draws them on input image
@@ -137,7 +137,7 @@ void ExtractFeat::testing(Fillet &fillet)
 }
 
 
-void ExtractFeat::getMeanHist(Fillet &fillet)
+void ExtractFeat::getMean(Fillet &fillet)
 {
 	Mat hsv_img;
 	cvtColor(fillet.img, hsv_img, CV_BGR2HSV);
