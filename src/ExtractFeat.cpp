@@ -188,7 +188,7 @@ void ExtractFeat::getBloodstains(Fillet &fillet)
 
 		Mat mask = Mat(hsv_img.rows, hsv_img.cols, CV_8U, Scalar(0));
 		drawContours(mask, contours_bin, i, 255, -1);
-		Scalar means = mean(hsv_img, mask);
+		Scalar means = mean(fillet.img, mask);
 
 		if (means.val[2] > 130)
 			continue;
