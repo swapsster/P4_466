@@ -43,7 +43,7 @@ void testing()
 	loadImages("../data/images/testing/*.tif", images);
 	ExtractFeat classifier;
 	classifier.testingMode = true;
-	classifier.run(images);
+	classifier.runTesting(images);
 }
 
  void training()
@@ -52,7 +52,7 @@ void testing()
 	loadImages("../data/images/training/*.tif", images);
 	ExtractFeat classifier;
 	classifier.testingMode = false;
-	classifier.run(images);
+	classifier.runTraining(images);
 }
 int main()
 {
