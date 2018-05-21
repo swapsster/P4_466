@@ -45,8 +45,7 @@ public:
 	void displayImg(const String &name, const Mat &img);
 	void makeBinary(const Mat &img, Mat &bin);
 	//------------Nuværende-fisk----------------------
-	void training(Fillet &fillet);
-	void testing(Fillet &fillet);
+
 	void Classify(const Fillet &fillet);
 	
 	void getMeanHist(Fillet &fillet);
@@ -58,6 +57,7 @@ public:
 	//------------Efter-Features-------------------------------
 	void saveFeatures(const Fillet &fillet);
 	//------------Main----------------------
-	void run(vector<Mat> &images);
+	void runTesting(vector<Mat> &images);
+	void runTraining(vector<Mat> &images);
 };
 
