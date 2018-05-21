@@ -23,7 +23,7 @@ struct Fillet {
 	double skinArea = 0;
 	double largestNotch = 0;
 	bool bloodstain = false;
-	string classification;
+	int classification = 0; 				//bad meat = 1; bad skin =2; good meat 3; good skin=4; 
 	string reason = "None";
 
 
