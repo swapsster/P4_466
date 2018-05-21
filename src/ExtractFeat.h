@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stdafx.h"
+
 #include <cstdio>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -7,6 +9,8 @@
 #include <opencv2/opencv.hpp>
 #include <iostream> // cout
 #include <fstream> // Open files
+#include <math.h>
+
 
 using namespace cv;
 using namespace std;
@@ -19,9 +23,11 @@ struct Fillet {
 	double skinArea = 0;
 	double largestNotch = 0;
 	bool bloodstain = false;
+	string classification;
+	string reason = "None";
 
 
-	
+
 	Rect boundRect;									// The img is generated from the original image using this boundingRect
 	vector<Point> contour;							// Coordinates of the fillet 
 	Mat img, bin;									// Only the boundingRect image from original image + Binary image of fillet							
@@ -30,13 +36,19 @@ struct Fillet {
 class ExtractFeat
 {
 public:
+	bool testingMode = false;
 	String data_file_path = "../data/features.dat";
+	String data_file_path_classification = "../data/classification.dat";
 
 	//------------Uden-For-Loop----------------------
 	void clearFileContent();
 	void displayImg(const String &name, const Mat &img);
 	void makeBinary(const Mat &img, Mat &bin);
 	//------------Nuværende-fisk----------------------
+	void training(Fillet &fillet);
+	void testing(Fillet &fillet);
+	void Classify(const Fillet &fillet);
+	
 	void getMeanHist(Fillet &fillet);
 	void getBloodstains(Fillet &fillet);
 	void getNotches(Fillet &fillet);
