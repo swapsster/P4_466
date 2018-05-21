@@ -1,15 +1,25 @@
 #include "ExtractFeat.h"
 
+
 using namespace cv;
 using namespace std;
 
 //----------------------------------------------Uden-for-loop--------------------------------------------------------------------------------------------------
 void ExtractFeat::clearFileContent()
 {
+	if (testingMode==false)
+	{ 
 	ofstream ofs;
 	ofs.open(data_file_path, std::ofstream::out | std::ofstream::trunc); // Open and clear content
 	ofs << "Name,Area,S_Mean,V_Mean,Bloodstains,Notches,Convexity,Skin_Area\n";
 	ofs.close();
+	}
+	else
+	{
+		ofstream ofs;
+		ofs.open(data_file_path_classification, std::ofstream::out | std::ofstream::trunc); // Open and clear content
+		ofs.close();
+	}
 }
 
 void ExtractFeat::displayImg(const String &name, const Mat &img)
@@ -26,12 +36,12 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 
 	for (int x = 0; x < img.cols; x++) {
 		for (int y = 0; y < img.rows; y++) {
-		// Check if blue pixel is "stronger" than red and green
-            	int blue = color_arr[0].at<uchar>(y, x);
-            	int green = color_arr[1].at<uchar>(y, x);
-            	int red = color_arr[2].at<uchar>(y, x);
-		if ((blue > red) && (blue > green))
-			bin.at<uchar>(y, x) = 0;
+			// Check if blue pixel is "stronger" than red and green
+			int blue = color_arr[0].at<uchar>(y, x);
+			int green = color_arr[1].at<uchar>(y, x);
+			int red = color_arr[2].at<uchar>(y, x);
+			if ((blue > red) && (blue > green))
+				bin.at<uchar>(y, x) = 0;
 		}
 	}
 
@@ -39,6 +49,93 @@ void ExtractFeat::makeBinary(const Mat &img, Mat &bin)
 }
 
 //----------------------------------------------Nuværende-fisk--------------------------------------------------------------------------------------------------
+void ExtractFeat::training(Fillet &fillet)
+{
+	getMeanHist(fillet); // Calculates the mean histogram value of each HSV channel
+
+	getBloodstains(fillet);														// Detects bloodstains and draws them on input image
+
+	getNotches(fillet);															//Detects notches and gives coordinates of them.
+
+	getShape(fillet);
+
+	getSkin(fillet);
+
+	// -------after-Features-------------------------------------
+	saveFeatures(fillet);
+
+	//displayImg("fillet.img_" + new_fillet.name, new_fillet.img);
+}
+
+void ExtractFeat::testing(Fillet &fillet)
+{
+	int m = 10;
+	int b = 1500;
+	getMeanHist(fillet); // Calculates the mean histogram value of each HSV channel
+	if (m*fillet.hist_mean[0] + fillet.hist_mean[1] >= b) // meat side
+	{// if over the b value it is the meat side.
+		getBloodstains(fillet);														// Detects bloodstains and draws them on input image
+		if (fillet.bloodstain == true)
+		{ 
+			fillet.classification = "Bad meat";
+			fillet.reason = "Bloodstain";
+		}
+		else
+		{
+			getShape(fillet);
+			if(fillet.convexity<0.9436)
+			{ 
+				fillet.classification = "Bad meat";
+				fillet.reason = "Deformity";
+			}
+			else
+			{
+				getNotches(fillet);															//Detects notches and gives coordinates of them.
+				if(fillet.largestNotch>142.5)
+				{ 
+				fillet.classification = "Bad meat";
+				fillet.reason = "Notch";
+				}
+
+				else
+					fillet.classification = "Good meat";
+			}
+		}
+	}
+	else //Skin side
+	{
+		// if over the b value it is the meat side.
+		getSkin(fillet);														// Detects bloodstains and draws them on input image
+		if (fillet.skinArea>66000)
+		{ 
+			fillet.classification = "Bad Skin";
+			fillet.reason = "Excessive Skin";
+		}
+		else
+		{
+			getShape(fillet);
+			if (fillet.convexity<0.9436)
+			{
+				fillet.classification = "Bad Skin";
+				fillet.reason = "Deformity";
+			}
+			else
+			{
+				getNotches(fillet);															//Detects notches and gives coordinates of them.
+				if (fillet.largestNotch > 142.5)
+				{
+					fillet.classification = "Bad Skin";
+					fillet.reason = "Notch";
+				}
+				else
+					fillet.classification = "Good Skin";
+			}
+		}
+	}
+	// -------After binary tree-------------------------------------
+	Classify(fillet);
+}
+
 
 void ExtractFeat::getMeanHist(Fillet &fillet)
 {
@@ -163,7 +260,7 @@ void ExtractFeat::getSkin(Fillet &fillet)
 	split(skinimg, hsv_planes);
 
 	hsv_planes[1].copyTo(skin_region(region));
-	
+
 	// Set threshold and maxValue
 	double thresh = 125;
 	double maxValue = 255;
@@ -204,6 +301,18 @@ void ExtractFeat::saveFeatures(const Fillet &fillet)
 	datafile.close();
 }
 
+void ExtractFeat::Classify(const Fillet &fillet)
+{
+	ofstream datafile;
+	datafile.open(data_file_path_classification, std::ios_base::app);
+
+	datafile << fillet.name << ',';
+	
+	datafile << fillet.classification << ',';
+	datafile << fillet.reason << '\n';
+	datafile.close();
+}
+
 //----------------------------------------------MAIN--------------------------------------------------------------------------------------------------
 void ExtractFeat::run(vector<Mat> &images)
 {
@@ -234,7 +343,7 @@ void ExtractFeat::run(vector<Mat> &images)
 			///////////////// START PROCESSING /////////////////
 			Fillet new_fillet;
 			new_fillet.area = contour_area;
-			
+
 			// Save the contour points in relation to the bounding box
 			new_fillet.boundRect = boundingRect(contours[i]);
 
@@ -261,20 +370,17 @@ void ExtractFeat::run(vector<Mat> &images)
 			string index_str = (index > 9) ? to_string(index) : "0" + to_string(index);
 			new_fillet.name = "fish-" + index_str + "-" + to_string(filletCounter);
 
-			// Calculates the mean histogram value of each BGR channel
-			getMeanHist(new_fillet);
+			if (testingMode == false)
+			{
+			//TRAINING-----------------------------------------------------------
+			training(new_fillet);
+			}
+			if (testingMode == true) 
+			{
+			// TESTING ---------------------------------------------------
+			testing(new_fillet);
+			}
 
-			getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
-
-			getNotches(new_fillet);															//Detects notches and gives coordinates of them.
-
-			getShape(new_fillet);
-
-			getSkin(new_fillet);
-			// -------after-Features-------------------------------------
-			saveFeatures(new_fillet);
-
-			//displayImg("fillet.img_" + new_fillet.name, new_fillet.img);
 		}
 
 		String name_orig = "Original img " + to_string(index);
