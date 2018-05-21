@@ -291,7 +291,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 				getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
 				if (new_fillet.bloodstain == true)
 				{
-					new_fillet.classification = "Bad meat";
+					new_fillet.classification = 1;
 					new_fillet.reason = "Bloodstain";
 				}
 				else
@@ -299,7 +299,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 					getShape(new_fillet);
 					if (new_fillet.convexity<0.9436)
 					{
-						new_fillet.classification = "Bad meat";
+						new_fillet.classification = 1;
 						new_fillet.reason = "Deformity";
 					}
 					else
@@ -307,12 +307,12 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
 						if (new_fillet.largestNotch>142.5)
 						{
-							new_fillet.classification = "Bad meat";
+							new_fillet.classification = 1;
 							new_fillet.reason = "Notch";
 						}
 
 						else
-							new_fillet.classification = "Good meat";
+							new_fillet.classification = 3;
 					}
 				}
 			}
@@ -322,7 +322,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 				getSkin(new_fillet);														// Detects bloodstains and draws them on input image
 				if (new_fillet.skinArea>66000)
 				{
-					new_fillet.classification = "Bad Skin";
+					new_fillet.classification = 2;
 					new_fillet.reason = "Excessive Skin";
 				}
 				else
@@ -330,7 +330,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 					getShape(new_fillet);
 					if (new_fillet.convexity<0.9436)
 					{
-						new_fillet.classification = "Bad Skin";
+						new_fillet.classification = 2;
 						new_fillet.reason = "Deformity";
 					}
 					else
@@ -338,11 +338,11 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
 						if (new_fillet.largestNotch > 142.5)
 						{
-							new_fillet.classification = "Bad Skin";
+							new_fillet.classification = 2;
 							new_fillet.reason = "Notch";
 						}
 						else
-							new_fillet.classification = "Good Skin";
+							new_fillet.classification = 4;
 					}
 				}
 			}
