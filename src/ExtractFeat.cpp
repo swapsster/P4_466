@@ -143,9 +143,10 @@ void ExtractFeat::getNotches(Fillet &fillet)
 
 	for (int i = 0; i < notch_contours.size(); i++)
 	{
-		if (contourArea(notch_contours[i]) > fillet.largestNotch)
+		double notch_area = contourArea(notch_contours[i]);
+		if (notch_area > fillet.largestNotch)
 		{
-			fillet.largestNotch = contourArea(notch_contours[i]);
+			fillet.largestNotch = notch_area;
 		}
 	}
 }
