@@ -257,7 +257,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 			getMean(new_fillet);
 			if (-m * new_fillet.hist_mean[0] + new_fillet.hist_mean[1] >= b)
 			{
-				getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
+				getBloodstains(new_fillet);					
 				if (new_fillet.bloodstain == true)
 				{
 					new_fillet.classification = 1;
@@ -273,7 +273,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 					}
 					else
 					{
-						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+						getNotches(new_fillet);															 
 						if (new_fillet.largestNotch > 142.5)
 						{
 							new_fillet.classification = 1;
@@ -288,7 +288,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 			}
 			else
 			{
-				getSkin(new_fillet);														// Detects bloodstains and draws them on input image
+				getSkin(new_fillet);													
 				if (new_fillet.skinArea > 66000)
 				{
 					new_fillet.classification = 2;
@@ -304,7 +304,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 					}
 					else
 					{
-						getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+						getNotches(new_fillet);	
 						if (new_fillet.largestNotch > 142.5)
 						{
 							new_fillet.classification = 2;
@@ -374,9 +374,9 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 
 			getMean(new_fillet);
 
-			getBloodstains(new_fillet);														// Detects bloodstains and draws them on input image
+			getBloodstains(new_fillet);
 
-			getNotches(new_fillet);															//Detects notches and gives coordinates of them.
+			getNotches(new_fillet);	
 
 			getShape(new_fillet);
 			
