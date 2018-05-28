@@ -239,7 +239,8 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 
 			for (int j = 0; j < contours[i].size(); j++) 
 			{
-				new_fillet.contour.push_back({contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y});
+				Point relativeXY = Point(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
+				new_fillet.contour.push_back(relativeXY);	
 			}
 
 			vector<vector<Point>> current_contour;
@@ -359,10 +360,8 @@ void ExtractFeat::runTraining(vector<Mat> &images)
 
 			for (int j = 0; j < contours[i].size(); j++) 
 			{
-				int relativeX = contours[i][j].x - new_fillet.boundRect.x;
-				int relativeY = contours[i][j].y - new_fillet.boundRect.y;
-
-				new_fillet.contour.emplace_back(relativeX, relativeY);	
+				Point relativeXY = Point(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
+				new_fillet.contour.push_back(relativeXY);	
 			}
 
 			drawContours(new_fillet.bin, vector<vector<Point>> (1, new_fillet.contour), 0, 255, -1);
