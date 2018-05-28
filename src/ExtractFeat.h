@@ -54,4 +54,3 @@ public:
 	void runTesting(vector<Mat> &images);
 	void runTraining(vector<Mat> &images);
 };
-
