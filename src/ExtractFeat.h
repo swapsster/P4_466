@@ -1,36 +1,33 @@
 #pragma once
 
-#include "stdafx.h"
-
 #include <cstdio>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
-#include <iostream> // cout
-#include <fstream> // Open files
+#include <iostream>
+#include <fstream>
 #include <math.h>
 
 
 using namespace cv;
 using namespace std;
 
-struct Fillet {
+struct Fillet 
+{
 	String name;
-	double hist_mean[2] = { 0 };						// Saturation, Value
+	double hist_mean[2] = { 0 };
 	double area = 0;
-	double convexity = 0;						// Contour area + convexity(squarity) which is contour area divided by boundrect area.
+	double convexity = 0;
 	double skinArea = 0;
 	double largestNotch = 0;
 	bool bloodstain = false;
-	int classification = 0; 				//bad meat = 1; bad skin =2; good meat 3; good skin=4; 
+	int classification = 0;
 	string reason = "None";
 
-
-
-	Rect boundRect;									// The img is generated from the original image using this boundingRect
-	vector<Point> contour;							// Coordinates of the fillet 
-	Mat img, bin;									// Only the boundingRect image from original image + Binary image of fillet							
+	Rect boundRect;
+	vector<Point> contour;
+	Mat img, bin;
 };
 
 class ExtractFeat
@@ -40,11 +37,9 @@ public:
 	String data_file_path = "../data/features.dat";
 	String data_file_path_classification = "../data/classification.dat";
 
-	//------------Uden-For-Loop----------------------
 	void clearFileContent();
 	void displayImg(const String &name, const Mat &img);
 	void makeBinary(const Mat &img, Mat &bin);
-	//------------Nuværende-fisk----------------------
 
 	void Classify(const Fillet &fillet);
 	
@@ -54,9 +49,8 @@ public:
 	void getShape(Fillet &fillet);
 	void getSkin(Fillet &fillet);
 
-	//------------Efter-Features-------------------------------
 	void saveFeatures(const Fillet &fillet);
-	//------------Main----------------------
+
 	void runTesting(vector<Mat> &images);
 	void runTraining(vector<Mat> &images);
 };
