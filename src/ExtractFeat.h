@@ -9,7 +9,6 @@
 #include <fstream>
 #include <math.h>
 
-
 using namespace cv;
 using namespace std;
 
