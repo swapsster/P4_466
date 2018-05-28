@@ -239,7 +239,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 
 			for (int j = 0; j < contours[i].size(); j++) 
 			{
-				new_fillet.contour.push_back(contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y);
+				new_fillet.contour.push_back({contours[i][j].x - new_fillet.boundRect.x, contours[i][j].y - new_fillet.boundRect.y});
 			}
 
 			vector<vector<Point>> current_contour;
