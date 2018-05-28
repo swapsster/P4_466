@@ -143,8 +143,8 @@ void ExtractFeat::getNotches(Fillet &fillet)
 void ExtractFeat::getShape(Fillet &fillet)
 {
 	vector<Point> hull;
-	convexHull((fillet.contour), hull);
-	fillet.convexity = ((contourArea(fillet.contour)) / contourArea(hull));
+	convexHull(fillet.contour, hull);
+	fillet.convexity = contourArea(fillet.contour) / contourArea(hull);
 }
 
 void ExtractFeat::getSkin(Fillet &fillet)
