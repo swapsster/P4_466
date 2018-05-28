@@ -77,7 +77,7 @@ void ExtractFeat::getBloodstains(Fillet &fillet)
 	medianBlur(mix, mix, 29);
 
 	vector<vector<Point> > contours_bin;
-	findContours(mix, contours_bin, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);	// Find contours
+	findContours(mix, contours_bin, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
 
 	for (int i = 0; i < contours_bin.size(); i++)
 	{
