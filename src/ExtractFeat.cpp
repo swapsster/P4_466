@@ -55,8 +55,8 @@ void ExtractFeat::getMean(Fillet &fillet)
 
 	Scalar means = mean(hsv_img, fillet.bin);
 
-	fillet.hist_mean[0] = means.val[1];
-	fillet.hist_mean[1] = means.val[2];
+	fillet.mean[0] = means.val[1];
+	fillet.mean[1] = means.val[2];
 }
 
 void ExtractFeat::getBloodstains(Fillet &fillet)
@@ -184,8 +184,8 @@ void ExtractFeat::saveFeatures(const Fillet &fillet)
 
 	datafile << fillet.name << ',';
 	datafile << fillet.area << ',';
-	datafile << fillet.hist_mean[0] << ',';
-	datafile << fillet.hist_mean[1] << ',';
+	datafile << fillet.mean[0] << ',';
+	datafile << fillet.mean[1] << ',';
 	datafile << fillet.bloodstain << ',';
 	datafile << fillet.largestNotch << ',';
 	datafile << fillet.convexity << ',';
@@ -256,7 +256,7 @@ void ExtractFeat::runTesting(vector<Mat> &images)
 			int m = -10;
 			int b = 1545;
 			getMean(new_fillet);
-			if (-m * new_fillet.hist_mean[0] + new_fillet.hist_mean[1] >= b)
+			if (-m * new_fillet.mean[0] + new_fillet.mean[1] >= b)
 			{
 				getBloodstains(new_fillet);					
 				if (new_fillet.bloodstain == true)
