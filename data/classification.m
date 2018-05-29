@@ -4,7 +4,7 @@ clear;clc;close all
 features = readtable('features.dat');
 
 % Load Official classification
-official = readtable('Official.xlsx');
+official = readtable('Official - Training.csv');
 
 % Save fish names
 c = categorical(official{:,2});
