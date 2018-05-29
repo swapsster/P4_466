@@ -40,10 +40,11 @@ scatter(skin_s_value, skin_v_value)
 scatter(meat_s_value, meat_v_value)
 refline([-10 1545]) % (y = m*x + b) (10*x + y >= 1545) -> meat side
 
-title('S,V channel values from Skin and Meat side')
+text(132, 250, 'y = -10x+1545', 'FontSize',11);
+%title('S and V channel values from the skin and meat sides')
 xlabel('Satuation')
 ylabel('Value')
-legend('Skin side', 'Meat side', 'Location','northwest')
+legend('Skin side', 'Meat side', 'Limit boundary', 'Location','northeast')
 
 
 
