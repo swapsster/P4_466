@@ -32,7 +32,7 @@ void loadImages(const String &path, vector<Mat> &images)
 
 		int x = 0, y = 330;
 		int width = 1936, height = 1037;
-		im = im(Rect(x, y, width - x, height - y));  // This Rect is approx only the conveyor for test data billeder
+		im = im(Rect(x, y, width - x, height - y));
 
 		images.push_back(im);
 	}

@@ -15,7 +15,7 @@ using namespace std;
 struct Fillet 
 {
 	String name;
-	double hist_mean[2] = { 0 };
+	double mean[2] = { 0 };
 	double area = 0;
 	double convexity = 0;
 	double skinArea = 0;
